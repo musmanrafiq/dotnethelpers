@@ -1,14 +1,15 @@
 ﻿using System;
-using UHelpers;
+using UHelpers.Extensions;
 
 namespace UHelper.Client
 {
     static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var tempString = Strings.RandomString(10);
-            Console.WriteLine(tempString);
+            var tempString = "HowAreYou";
+            var sn = tempString.ToSnakeCase();
+            Console.WriteLine(sn);
             Console.ReadKey();
         }
     }
