@@ -2,6 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageId>FirebaseNotifications</PackageId>
+    <Title>FirebaseNotifications, Configurable Firebase Messaging Utility</Title>
+    <Version>1.0.0</Version>
+    <Authors>M.Usman Rafiq</Authors>
+    <Company>M.Usman Rafiq</Company>
+    <Description>FirebaseNotifications, Configurable Firebase Messaging Utility.</Description>
+    <RepositoryUrl>https://github.com/musmanrafiq/dotnethelpers</RepositoryUrl>
+    <PackageTags>c#, Firebase Messaging</PackageTags>
+    <PackageReleaseNotes>FirebaseNotifications, Configurable Firebase Messaging Utility</PackageReleaseNotes>
+    <NeutralLanguage>en</NeutralLanguage>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
