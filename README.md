@@ -11,9 +11,11 @@ To use firebase notifications package there are two scenarios :
 1 - We have only one server key to use for sending notifications 
 
 In that case add one property i.e. ServerKey in your {config}.json file in your project like 
+
 "FirebaseMessaging" : 
 { "ServerKey" : "YOUR SERVER KEY HERE" 
 } 
+
 And next step is to add RegisterFirebaseMessaging(configuration); in your startup.cs file. 
 Third and last step is to inject IFirebaseNotificationService in your class where you want to use it i.e. 
 
