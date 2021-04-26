@@ -37,9 +37,10 @@ await firebaseMessagingService.SendNotification(deviceIds, "message", "title", "
 ```
 
 2 - We have multiple server keys ( multiple projects to support ) to use for sending notifications 
+In that case we don't need update {config}.json file
 
 ```csharp
-In that case we don't need update {config}.json file
+
 just add RegisterFirebaseMessaging(configuration); in Startup.cs 
 
 // if you are supporting multiple server keys ( firebase projects ), and have device ids 
