@@ -11,35 +11,49 @@ namespace FirebaseNotifications.Services
 {
     public class FirebaseNotificationService : IFirebaseNotificationService
     {
-        readonly FirebaseOptions _firebaseOptions;
+        // private properties
+        private readonly FirebaseOptions _firebaseOptions;
+
+        // constructor
         public FirebaseNotificationService(IOptions<FirebaseOptions> options)
         {
             _firebaseOptions = options.Value;
         }
 
+        #region public methods
+
         public async Task SendNotification(List<string> deviceIds, string messageTitle, string message, dynamic notificationData = null, string topic = "")
         {
             object preparedData = deviceIds != null ? PrepareFcmDataForDeviceIds(deviceIds, messageTitle, message) : (!string.IsNullOrEmpty(topic) ? PrepareFcmDataForTopic(topic, messageTitle, message) : null);
+            
             if (preparedData != null)
-                await SendFcmWebRequest(preparedData).ConfigureAwait(false);
+            {
+                await SendFcmWebRequest(preparedData);
+            }
         }
 
         public async Task SendNotification(string serverKey, string messageTitle, string message, List<string> deviceIds = null, string topic = "")
         {
             object preparedData = deviceIds != null ? PrepareFcmDataForDeviceIds(deviceIds, messageTitle, message) : (!string.IsNullOrEmpty(topic) ? PrepareFcmDataForTopic(topic, messageTitle, message) : null);
+            
             if (preparedData != null)
-                await SendFcmWebRequest(serverKey, preparedData).ConfigureAwait(false);
+            {
+                await SendFcmWebRequest(preparedData, serverKey);
+            }
         }
 
-        private async Task SendFcmWebRequest(object data)
+        #endregion
+
+        #region private methods
+
+        private async Task SendFcmWebRequest(object data, string serverApiKey = null)
         {
-            ValidateServiceUrl();
             var byteArray = GetByteArray(data);
-            var serverApiKey = _firebaseOptions.ServerKey;
-            var tRequest = WebRequest.Create(_firebaseOptions.Url);
+            var serverKey = serverApiKey ?? _firebaseOptions.ServerKey;
+            var tRequest = WebRequest.Create(Constants.ServiceUrl);
             tRequest.Method = "post";
             tRequest.ContentType = "application/json";
-            tRequest.Headers.Add(string.Format("Authorization: key={0}", serverApiKey));
+            tRequest.Headers.Add(string.Format("Authorization: key={0}", serverKey));
             tRequest.ContentLength = byteArray.Length;
             tRequest.UseDefaultCredentials = true;
             tRequest.PreAuthenticate = true;
@@ -51,24 +65,6 @@ namespace FirebaseNotifications.Services
             }
         }
 
-        private async Task SendFcmWebRequest(string serverApiKey, object data)
-        {
-            ValidateServiceUrl();
-            var byteArray = GetByteArray(data);
-            var tRequest = WebRequest.Create(_firebaseOptions.Url);
-            tRequest.Method = "post";
-            tRequest.ContentType = "application/json";
-            tRequest.Headers.Add(string.Format("Authorization: key={0}", serverApiKey));
-            tRequest.ContentLength = byteArray.Length;
-            tRequest.UseDefaultCredentials = true;
-            tRequest.PreAuthenticate = true;
-            tRequest.Credentials = CredentialCache.DefaultCredentials;
-            using (var dataStream = tRequest.GetRequestStream())
-            {
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                await tRequest.GetResponseAsync();
-            }
-        }
         private object PrepareFcmDataForDeviceIds(List<string> deviceIds, string messageTitle, string message)
         {
 
@@ -118,12 +114,7 @@ namespace FirebaseNotifications.Services
             return byteArray;
         }
 
-        private void ValidateServiceUrl()
-        {
-            if (string.IsNullOrEmpty(_firebaseOptions.Url))
-            {
-                _firebaseOptions.Url = Constants.ServiceUrl;
-            }
-        }
+        #endregion
+
     }
 }
